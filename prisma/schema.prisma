@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+  Post Post[]
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  title      String
+  slug       String   @unique
+  image      String?  @default("null")
+  content    String
+  published  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  categoryId Int
+  Category   Category @relation(fields: [categoryId], references: [id])
+  Tag        Tag[]
+
+  @@index([categoryId], map: "Post_categoryId_fkey")
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String
+  Post Post[]
+}
