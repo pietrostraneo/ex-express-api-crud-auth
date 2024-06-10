@@ -1,5 +1,3 @@
-const { query, body } = require('express-validator');
-
 const bodyData = {
 
     title: {
@@ -46,22 +44,16 @@ const bodyData = {
         isInt: {
             errorMessage: 'CategoryId must be of type integer.',
             bail: true
-        },
-        custom: {
-
-            options: async (value) => {
-                const categoryId = parseInt(value);
-                const category = await prisma.category.findUnique({
-                    where: { id: categoryId }
-                });
-                if (!category) {
-                    return Promise.reject('CategoryId does not exist.');
-                }
-                return true;
-            }
-
         }
+
     },
+    userId: {
+        in: ["body"],
+        isInt: {
+            errorMessage: 'UserId must be of type integer.',
+            bail: true
+        },
+    }
 
 }
 
