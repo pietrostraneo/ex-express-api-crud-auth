@@ -24,7 +24,7 @@ const registerBody = {
             }
         }
     },
-    name: {
+    username: {
         in: ["body"],
         isString: {
             errorMessage: 'Name must be a string.',

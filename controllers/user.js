@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const { hashPassword, readPass } = require('../utils.js');
+const { hashPassword, readPass } = require('../utils/pass.js');
 const tknGenerator = require('../utils/jwt.js');
 
 const register = async (req, res) => {
@@ -10,12 +10,10 @@ const register = async (req, res) => {
 
         const { username, email, password } = req.body;
 
-        const hashedPass = hashPassword(password);
-
         const data = {
             username,
             email,
-            password: hashedPass
+            password: await hashPassword(password)
         }
 
         const newUser = await prisma.user.create({ data })

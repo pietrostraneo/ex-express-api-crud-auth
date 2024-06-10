@@ -32,7 +32,7 @@ const bodyData = {
         }
 
     },
-    available: {
+    published: {
 
         in: ["body"],
         isBoolean: {
