@@ -8,6 +8,12 @@ const notFound = require('./middlewares/notFound.js');
 
 const port = process.env.PORT || 3000;
 
+const cors = require('cors');
+
+app.use(cors({
+    origin: '*',
+}))
+
 require('dotenv').config();
 
 app.use(express.json());
