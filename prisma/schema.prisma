@@ -25,6 +25,8 @@ model Post {
   categoryId Int
   Category   Category @relation(fields: [categoryId], references: [id])
   Tag        Tag[]
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
 
   @@index([categoryId], map: "Post_categoryId_fkey")
 }
@@ -42,4 +44,5 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Post      Post[]
 }

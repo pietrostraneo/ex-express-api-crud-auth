@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 const slugify = require('slugify');
 
 const index = async (req, res) => {
@@ -19,6 +19,11 @@ const index = async (req, res) => {
                         name: true,
                     },
 
+                },
+                User: {
+                    select: {
+                        username: true,
+                    }
                 }
             }
         })
@@ -54,6 +59,11 @@ const show = async (req, res) => {
                         name: true,
                     },
 
+                },
+                User: {
+                    select: {
+                        username: true,
+                    }
                 }
             }
 
@@ -73,7 +83,7 @@ const show = async (req, res) => {
 const store = async (req, res) => {
 
     try {
-        const { title, content, published, categoryId } = req.body;
+        const { title, content, published, categoryId, userId } = req.body;
 
         const slug = slugify(title);
 
@@ -88,7 +98,8 @@ const store = async (req, res) => {
                     { id: 1 },
                     { id: 3 }
                 ]
-            }
+            },
+            userId
         }
 
         const newPost = await prisma.post.create({ data })
