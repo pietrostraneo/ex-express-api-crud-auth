@@ -1,16 +1,58 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const store = (req, res) => {
-    const { username, email, password } = req.body;
+const { hashPassword, readPass } = require('../utils.js');
+const tknGenerator = require('../utils/jwt.js');
 
-    const data = {
-        username,
-        email,
+const register = async (req, res) => {
+
+    try {
+
+        const { username, email, password } = req.body;
+
+        const hashedPass = hashPassword(password);
+
+        const data = {
+            username,
+            email,
+            password: hashedPass
+        }
+
+        const newUser = await prisma.user.create({ data })
+        const token = tknGenerator({
+            username: newUser.username,
+            email: newUser.email
+        });
+
+        res.json({ token, data: newUser });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+        const isValid = await readPass(password, user.password)
+        if (!isValid) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+        const token = tknGenerator({
+            username: user.username,
+            email: user.email
+        });
+        res.json({ token, data: user });
+    } catch (err) {
+        console.error(err);
     }
 }
 
 module.exports = {
-    store,
-    update
+    register,
+    login
 }
