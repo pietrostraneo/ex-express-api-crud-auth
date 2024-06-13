@@ -3,6 +3,8 @@ const app = express();
 
 const postRouter = require('./routers/post.js');
 const authRouter = require('./routers/auth.js');
+const tagRouter = require('./routers/tag.js');
+
 const errorHandler = require('./middlewares/errorHandler.js');
 const notFound = require('./middlewares/notFound.js');
 
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use('/auth', authRouter);
 
 app.use('/posts', postRouter);
+
+app.use('/tags', tagRouter);
 
 app.use(notFound);
 
